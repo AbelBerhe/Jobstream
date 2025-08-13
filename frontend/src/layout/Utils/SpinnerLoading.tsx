@@ -2,7 +2,7 @@ import React from 'react'
 
 export const SpinnerLoading = () => {
   return (
-    <div className='container m-5 d-flex justify-content-center' style={{height: '550px'}}>
+    <div className='container m-5 d-flex justify-content-center mx-auto' style={{height: '550px'}}>
         <div className='spinner-border text-primary' role='status'>
             <span className='visually-hidden'>
                 Loading...

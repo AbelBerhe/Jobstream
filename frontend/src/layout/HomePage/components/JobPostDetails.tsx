@@ -13,7 +13,7 @@ export const JobPostDetails: React.FC<{ selectedJob: JobPostModel}> = (props) =>
         <p className='mb-0'>{props.selectedJob.location}</p>
         <p>{props.selectedJob.jobType}</p>
 
-        <Link className='btn btn-primary rounded rounded-3' to={''}>Apply Now</Link>
+        <Link className='btn btn-primary rounded rounded-3' to={'/apply-job'}>Apply Now</Link>
       </div>
       <hr />
       <div className='job-post-detail-panel-content mb-5'>

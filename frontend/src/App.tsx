@@ -9,6 +9,7 @@ import LoginWidget from './Auth/LoginWidget';
 import {LoginCallback, Security} from '@okta/okta-react'
 import config from './lib/config';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js'
+import { ApplicationFormPage } from './layout/ApplicationFormPage/ApplicationFormPage';
 const oktaAuth = new OktaAuth(config.oidc)
 
 function App() {
@@ -39,6 +40,9 @@ function App() {
            
             <Route path='/home'>
               <HomePage />
+            </Route>
+            <Route path={'/apply-job'}>
+              <ApplicationFormPage/>
             </Route>
 
             <Route path='/login' render={

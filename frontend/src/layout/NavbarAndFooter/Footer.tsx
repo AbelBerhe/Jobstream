@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export const Footer = () => {
   return (
-    <div className='main-color'>
+    <div className='main-color mt-3'>
         <footer className='container d-flex flex-wrap justify-content-center align-items-center main-color py-2 nav-footer'>
             <p className='col-md-4 mb-0 text-white'>©JobStream, Inc</p>
             <ul className='nav col-md-4 justify-content-end'>

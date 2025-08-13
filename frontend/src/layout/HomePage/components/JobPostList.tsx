@@ -101,7 +101,7 @@ export const JobPostList = () => {
         if (location === '') {
             setSearchUrl('');
             setIsError(true);
-            setErrorMessage("Location can't be empty!");
+            setErrorMessage('');
         } else {
             const regex = /^\s*[A-Za-z]+(?:\s+[A-Za-z]+)*\s*,?\s*[A-Za-z]{2}\s*$/;
 
@@ -180,7 +180,7 @@ export const JobPostList = () => {
                 </div>
             </div> 
             :
-            <div className=''>
+            <div className='mt-5 text-center'>
                 <div>No Jobs are matched to the <span className='text-secondary fw-bold'>{`${title ? title :'title'} in ${location}`}</span></div>
             </div>
         }
