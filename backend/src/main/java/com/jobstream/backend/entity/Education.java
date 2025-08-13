@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 /**
@@ -31,9 +32,9 @@ public class Education {
     @Column(name = "field_of_study")
     private String fieldOfStudy;
     @Column(name = "start_date")
-    private String startDate;
+    private LocalDate startDate;
     @Column(name = "end_date")
-    private String endDate;
+    private LocalDate endDate;
 
 
     @ManyToOne
