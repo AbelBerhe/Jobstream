@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { SpinnerLoading } from '../layout/Utils/SpinnerLoading';
@@ -6,19 +6,21 @@ import { Redirect } from 'react-router-dom'
 import OktaSignInWidget from './OktaSignInWidget';
 
 
+
 const LoginWidget = () => {
 
+ 
     const { authState, oktaAuth} = useOktaAuth();
 
     const onSuccess = (tokens) => {
-        oktaAuth.handleLoginRedirect(tokens)
     };
 
     const onError = (err) =>{
         console.log('Sign in error job-stream ', err)
     }
 
-    if(!authState){
+
+    if(!authState && !authState?.isAuthenticated){
         return (
         <SpinnerLoading/>
     ) 

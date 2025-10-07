@@ -5,15 +5,39 @@ import JobPostModel from '../../../models/JobPostModel'
 import { JobPost } from './JobPost'
 import { SpinnerLoading } from '../../Utils/SpinnerLoading'
 import { JobPostDetails } from './JobPostDetails'
-import { ContentPlaceHolder } from '../../Utils/ContentPlaceHolder'
-import { useOktaAuth } from '@okta/okta-react'
+import { Link } from 'react-router-dom'
+import { MobileJobView } from './MobileJobView'
 
+
+type JobPost = {
+    title: "",
+    company: "",
+    whatWeOffer: "",
+    whatYouShouldKnow: "",
+    qualifications: "",
+    educationRequirement: "",
+    location: "",
+    jobType: "",
+    expiryDate: "",
+}
 export const JobPostList = () => {
     const [jobPosts, setJobPosts] = useState<JobPostModel[]>([]);
     const [totalAmount, setTotalAmount] = useState(0);
     const [isLoadingJobPosts, setIsLoadingJobPosts] = useState(true);
     const [httpError, setHttpError] = useState("");
-    const [selectedJobPost, setSelectedJobPost] = useState<JobPostModel>({});
+    const [isMobileDetailView, setIsMobileDetailView] = useState(false);
+    const [selectedJobPost, setSelectedJobPost] = useState<JobPostModel | null>({
+        id: "",
+        title: "",
+        company: "",
+        whatWeOffer: "",
+        whatYouShouldKnow: "",
+        qualifications: "",
+        educationRequirement: "",
+        location: "",
+        jobType: "",
+        expiryDate: "",
+    });
     const [location, setLocation] = useState('');
     const [title, setTitle] = useState('');
     const [searchUrl, setSearchUrl] = useState('');
@@ -45,7 +69,7 @@ export const JobPostList = () => {
        
 
             const responseJson = await response.json();
-            const responseData = responseJson.content;
+            const responseData = responseJson._embedded?.jobPostDTOes || [];
                 
             const jobPostList: JobPostModel[] = responseData.map((jobPost: any) => (
                 new JobPostModel(
@@ -64,16 +88,15 @@ export const JobPostList = () => {
                 )
             ))
 
-            // console.log("search url" + searchUrl)
             setJobPosts(jobPostList);
-            setTotalAmount(responseJson.totalElements)
+            setTotalAmount(responseJson.page.totalElements)
             setSelectedJobPost(jobPostList[0])
             setIsLoadingJobPosts(false);
         }
 
         fetchJobPosts().catch((error: any) => {
             setIsLoadingJobPosts(false);
-            setHttpError("jobPosts - Error")
+            setHttpError(error.message);
             console.log("error occurred!");
         })
     }, [searchUrl])
@@ -87,7 +110,7 @@ export const JobPostList = () => {
 
     if(httpError){
         return(
-              <div className='container m-5 text-danger'>
+              <div className='container m-5'>
                 <p>{httpError}</p>
             </div>
         )
@@ -96,6 +119,11 @@ export const JobPostList = () => {
     const handleJobPostDetail = (jobPost: JobPostModel)=>{
          setSelectedJobPost(jobPost)
     }
+
+    const handleJobPostDetailMobile = (jobPost: JobPostModel)=>{
+        setSelectedJobPost(jobPost)
+        setIsMobileDetailView(true);
+   }
 
     const handleJobPostSearchHandel = () => {
         if (location === '') {
@@ -113,11 +141,8 @@ export const JobPostList = () => {
                     const city = locationInput[0].trim(); // Optional: normalize internal spacing
                     const province = locationInput[1].trim();
                     const sanitizedLocation: string = `${city}, ${province}`;
-                    // console.log(sanitizedLocation);
-                    // console.log(title);
-
                     setIsError(false);
-                    setSearchUrl(`/search-jobs?title=${title}&location=${sanitizedLocation}`); ///search-jobs?title=&location=Toronto, ON
+                    setSearchUrl(`/search-jobs?title=${title}&location=${sanitizedLocation}`); ///search-jobs?title=&location=Toronto,ON
                 } else {
                     setIsError(true);
                     setErrorMessage("Invalid format. Eg: Toronto, ON");
@@ -135,8 +160,8 @@ export const JobPostList = () => {
 
 
     return (
-        <div className='mt-5 job-post-main-page'>
-            <div className='search-container'>
+        <div className='mt-5 job-post-list'>
+            {isMobileDetailView ? <></> :(<div className='search-container'>
                 <form className="d-flex flex-column flex-md-row gap-2 justify-content-center" role='search'>
                     <div className="search-box col-lg-6">
                         <label htmlFor="jobSearchKeyword" className="visually-hidden">Search</label>
@@ -148,7 +173,7 @@ export const JobPostList = () => {
                     <div className="search-box col-lg-3">
                         <label htmlFor="jobSearchLocation" className="visually-hidden">Search</label>
                         <span className='search-icon'><FontAwesomeIcon icon={faSearch} /></span>
-                        <input onChange={(e) =>{ setLocation(e.target.value);  setErrorMessage('');}} value={location} type="text"
+                        <input onChange={(e) =>{setLocation(e.target.value);  setErrorMessage('');}} value={location} type="text"
                          className="form-control input-search rounded-3 " id="jobSearchLocation" placeholder='Location (e.g. Toronto, ON)'
                         aria-label='search: Job Title, Keywords, or company' enterKeyHint='search' />
                       {isError && <span className='ms-3 text-danger' style={{fontSize: '.8rem', fontStyle: 'italic'}}>{errorMessage}</span>}
@@ -157,11 +182,12 @@ export const JobPostList = () => {
                         <button onClick={() => handleJobPostSearchHandel()} type="button" className="btn btn-outline-primary rounded-4 shadow w-100">Find Job</button>
                     </div>
                 </form>
-            </div>
+            </div>)}
 
 
             {jobPosts.length > 0 ? 
-            <div className='row mt-3 main-panel-job-row'>
+            <>
+            <div className='row d-none d-md-flex mt-3 main-panel-job-row'>
                 <div className='col-md-6 p-2 job-posts-panel'>
                     <div className='d-flex total-jobs-label'>
                         <p className='ms-auto me-4'>Total Jobs :  {totalAmount}</p>
@@ -175,14 +201,26 @@ export const JobPostList = () => {
                     </div>
                 </div>
 
-                <div className='col-md-6 p-2 d-none d-md-block border job-post-detail-panel'>
+                <div className='col-md-6 p-2 border job-post-detail-panel'>
                    <JobPostDetails selectedJob={selectedJobPost} />
                 </div>
             </div> 
-            :
+
+
+
+
+                    <MobileJobView jobPosts={jobPosts}
+                        selectedJobPost={selectedJobPost}
+                        handleJobPostDetailMobile={handleJobPostDetailMobile}
+                        goBack={() => setIsMobileDetailView(false)}
+                        isMobileDetailView={isMobileDetailView} 
+                        />
+                </>
+                :
             <div className='mt-5 text-center'>
                 <div>No Jobs are matched to the <span className='text-secondary fw-bold'>{`${title ? title :'title'} in ${location}`}</span></div>
             </div>
+
         }
         </div>
     )

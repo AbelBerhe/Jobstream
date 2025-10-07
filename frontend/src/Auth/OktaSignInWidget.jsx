@@ -1,11 +1,14 @@
 import React, { useEffect, useRef } from 'react'
 import OktaSignIn from '@okta/okta-signin-widget';
+import { useOktaAuth } from '@okta/okta-react';
 import config  from '../lib/config';
 import '@okta/okta-signin-widget/css/okta-sign-in.min.css';
+import UserModel from '../models/UserModel';
 
 
 const OktaSignInWidget = ({onSuccess, onError }) => {
   const widgetRef = useRef();
+  const { authState, oktaAuth} = useOktaAuth();
 
   useEffect(() => {
 
@@ -21,8 +24,21 @@ const OktaSignInWidget = ({onSuccess, onError }) => {
 
     widget.showSignInToGetTokens({
       el: widgetRef.current,
-    }).then(onSuccess).catch(onError);
-
+    }).then(async (tokens) => {
+    
+     await oktaAuth.handleLoginRedirect(tokens)
+         
+      if (tokens?.accessToken) {
+        // Save user in your backend DB
+        await fetch("http://localhost:8080/api/users/save-user", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${tokens.accessToken?.accessToken}`
+          }
+        });
+      }
+       onSuccess(tokens);
+    }).catch(onError);
 
     return () => widget.remove();
 

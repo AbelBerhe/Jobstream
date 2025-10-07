@@ -1,5 +1,5 @@
 class JobPostModel{
-    id?: string;
+    id: string;
     title?: string;
     company?: string;
     whatWeOffer?: string;

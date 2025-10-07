@@ -2,20 +2,23 @@ import React from 'react'
 import { NavLink, useHistory } from 'react-router-dom'
 import { SpinnerLoading } from '../Utils/SpinnerLoading'
 import { useOktaAuth } from '@okta/okta-react'
+import { useGroups } from '../../hooks/useGroups'
 
 export const Navbar = () => {
-     
-    const {authState, oktaAuth} = useOktaAuth();
-      const history = useHistory();
+
+    const groups = useGroups();
+    const { authState, oktaAuth } = useOktaAuth();
+    const history = useHistory();
 
 
-   const handleLogin = async () => history.push('/login');
-   const handleLogout = async () => oktaAuth.signOut();
+    const handleLogin = async () => history.push('/login');
+    const handleLogout = async () => oktaAuth.signOut();
+
 
     return (
         <nav className='navbar sticky-top navbar-expand-lg navbar-dark py-3 shadow'>
             <div className='container-fluid'>
-             <div className='navbar-brand'>
+                <div className='navbar-brand'>
                     <NavLink to="/home" className="text-decoration-none cursor-pointer NavBrand">
                         JobStream
                     </NavLink>
@@ -32,34 +35,38 @@ export const Navbar = () => {
                         <li className='nav-item'>
                             <NavLink className='nav-link' to={'/home'}>Home</NavLink>
                         </li>
-                            {authState?.isAuthenticated &&
-                           <li className='nav-item'>
-                            <NavLink className='nav-link' to={'/profile'}>Profile</NavLink>
-                        </li> 
+                        {authState?.isAuthenticated &&
+                            <li className='nav-item'>
+                                <NavLink className='nav-link' to={'/profile'}>Profile</NavLink>
+                            </li>
                         }
-                         {authState?.isAuthenticated &&
-                           <li className='nav-item'>
-                            <NavLink className='nav-link' to={'/applications'}>Applications</NavLink>
-                        </li> 
+                        {authState?.isAuthenticated &&
+                            <li className='nav-item'>
+                                <NavLink className='nav-link' to={'/applications'}>Applications</NavLink>
+                            </li>
                         }
+
+                        {authState?.isAuthenticated && groups.includes("Recruiters") && (
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/posts">Posts</NavLink>
+                            </li>
+                        )}
+
+                        {authState?.isAuthenticated &&
+                            <li className='nav-item'>
+                                <NavLink className='nav-link' to={'/contact-support'}>Contact-Support</NavLink>
+                            </li>
+                        }
+
+                        {authState?.isAuthenticated && groups.includes("Admins") && (
+                            <li className='nav-item'>
+                                <NavLink className='nav-link' to={'/admin'}>Admin</NavLink>
+                            </li>
+                        )}
 
                         <li className='nav-item'>
                             <NavLink className='nav-link' to={'/about'}>About</NavLink>
                         </li>
-
-
-                    
-                     
-
-                      
-                       
-                     
-
-                        {/* {(authState.isAuthenticated && authState.accessToken?.claims?.userType === 'admin')&&
-                            <li className='nav-item'>
-                                <NavLink className='nav-link' to={'/admin'}>Admin</NavLink>
-                            </li>
-                        } */}
 
                     </ul>
 
@@ -76,7 +83,7 @@ export const Navbar = () => {
                         }
                     </ul>
 
-                
+
                 </div>
             </div>
         </nav>

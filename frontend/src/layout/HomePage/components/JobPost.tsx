@@ -1,7 +1,7 @@
 import React from 'react'
 import JobPostModel from '../../../models/JobPostModel'
 
-export const JobPost: React.FC<{ jobPost: JobPostModel }> = (props) => {
+export const JobPost: React.FC<{jobPost: JobPostModel}> = (props) => {
   return (
       <div className="card  shadow rounded rounded-3 jobPost">
         <div className="card-body card-content">
