@@ -36,6 +36,7 @@ public class SpringDataRestConfig implements RepositoryRestConfigurer {
 
 
 
+        //disable HTTP methods for Spring Data REST
         disableHttpMethods(User.class, config , theUnsupportedActions);
         disableHttpMethods(Address.class, config , theUnsupportedActions);
         disableHttpMethods(Education.class, config , theUnsupportedActions);

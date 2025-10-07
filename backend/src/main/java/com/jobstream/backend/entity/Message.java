@@ -2,6 +2,8 @@ package com.jobstream.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -17,6 +19,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "message")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Message {
 
     @Id
@@ -35,7 +39,6 @@ public class Message {
 
 
 
-
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonIgnore
@@ -45,9 +48,5 @@ public class Message {
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
     @JsonIgnore
     private User admin;
-
-
-
-
 
     }

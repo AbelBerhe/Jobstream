@@ -2,13 +2,14 @@ package com.jobstream.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,8 +19,10 @@ import java.util.UUID;
  */
 @Data
 @Entity
-@Table(name = "job_post")
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "job_post")
+@Builder
 public class JobPost {
 
     @Id
@@ -46,14 +49,14 @@ public class JobPost {
     @Column(name = "posted_date")
     private LocalDateTime postedDate;
     @Column(name = "expiry_date")
-    private LocalDateTime expiryDate;
+    private LocalDate expiryDate;
     @Column(name = "is_active")
     private boolean isActive;
 
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "user_id")
-    private User applicant;
+    private User recruiter;
 
     @JsonIgnore
     @OneToMany(mappedBy = "jobPost",
@@ -62,16 +65,17 @@ public class JobPost {
     List<Application> applications;
 
 
-    public JobPost(String title, String company, String whatWeOffer, String whatYouShouldKnow, String qualifications, String educationRequirement, String location, String jobType) {
-        this.title = title;
-        this.company = company;
-        this.whatWeOffer = whatWeOffer;
-        this.whatYouShouldKnow = whatYouShouldKnow;
-        this.qualifications = qualifications;
-        this.educationRequirement = educationRequirement;
-        this.location = location;
-        this.jobType = jobType;
-    }
+//    public JobPost(String title, String company, String whatWeOffer, String whatYouShouldKnow, String qualifications, String educationRequirement, String location, String jobType, LocalDate expiryDate) {
+//        this.title = title;
+//        this.company = company;
+//        this.whatWeOffer = whatWeOffer;
+//        this.whatYouShouldKnow = whatYouShouldKnow;
+//        this.qualifications = qualifications;
+//        this.educationRequirement = educationRequirement;
+//        this.location = location;
+//        this.jobType = jobType;
+//        this.expiryDate = expiryDate;
+//    }
 
 
 }

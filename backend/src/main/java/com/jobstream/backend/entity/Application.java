@@ -2,6 +2,8 @@ package com.jobstream.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -19,6 +21,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "application")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Application {
 
     @Id
@@ -35,7 +39,7 @@ public class Application {
     @Column(name = "status")
     private String status;
     @Column(name = "applied_at")
-    private Date appliedAt = new Date();
+    private LocalDate appliedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -46,11 +50,4 @@ public class Application {
     @JsonIgnore
     private JobPost jobPost;
 
-
-    public Application(String coverLetterUrl, String resumeUrl, String jobTitle, Date appliedAt) {
-        this.coverLetterUrl = coverLetterUrl;
-        this.resumeUrl = resumeUrl;
-        this.jobTitle = jobTitle;
-        this.appliedAt = appliedAt;
-    }
 }

@@ -1,20 +1,15 @@
-package com.jobstream.backend.dto.responsemodel;
+package com.jobstream.backend.dto.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jobstream.backend.entity.JobPost;
-import jakarta.persistence.Column;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.UUID;
-
-import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 
 /**
  * Author: ABEL
@@ -32,8 +27,15 @@ public class JobPostDTO {
     private String educationRequirement;
     private String location;
     private String jobType;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String timeAgo;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String formattedExpiryDate;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String postDate;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String expiryDate;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean isActive;
 
     public JobPostDTO(JobPost post) {
@@ -46,11 +48,12 @@ public class JobPostDTO {
         this.qualifications = post.getQualifications();
         this.educationRequirement = post.getEducationRequirement();
         this.timeAgo = calculateTimeAgo(post.getPostedDate());
-        this.formattedExpiryDate = formatDate(post.getExpiryDate());
+        this.formattedExpiryDate = format(post.getExpiryDate());
         this.jobType = post.getJobType();
-        this.isActive = post.getExpiryDate().isAfter(LocalDateTime.now());
+        this.isActive = post.getExpiryDate().isAfter(LocalDate.now());
     }
 
+    // Calculate time ago
     private String calculateTimeAgo(LocalDateTime postDate) {
         Duration duration = Duration.between(postDate, LocalDateTime.now());
 
@@ -67,11 +70,11 @@ public class JobPostDTO {
         }else  return days == 1 ? "1 day ago" : days + " days ago";
     }
 
-    public String formatDate(LocalDateTime localDateTime){
-        LocalDate date = localDateTime.toLocalDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        return formatter.format(date);
-    }
 
+    // Format date
+    private String format(LocalDate jobPostExpiryDate){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+      return jobPostExpiryDate.format(formatter);
+    }
 
 }

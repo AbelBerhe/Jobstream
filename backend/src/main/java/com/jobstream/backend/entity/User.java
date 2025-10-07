@@ -2,7 +2,10 @@ package com.jobstream.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -21,6 +24,9 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "user")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -32,8 +38,6 @@ public class User {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name = "okta_id")
-    private String oktaId;
     @Column(name = "user_email")
     private String userEmail;
     @Column(name = "phone_number")
@@ -59,7 +63,7 @@ public class User {
 
     @JsonIgnore
     @RestResource(exported = false)
-    @OneToMany(mappedBy = "applicant",
+    @OneToMany(mappedBy = "recruiter",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private List<JobPost> jobPosts  = new ArrayList<>();
@@ -97,6 +101,5 @@ public class User {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private List<Message> sentMessages  = new ArrayList<>();
-
 
 }

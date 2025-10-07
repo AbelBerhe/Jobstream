@@ -2,6 +2,8 @@ package com.jobstream.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -18,6 +20,8 @@ import java.util.UUID;
 @Data
 @Table(name = "address")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -41,11 +45,6 @@ public class Address {
     @JsonIgnore
     private User applicant;
 
-    public Address(String street, String city, String provinceOrState){
 
-        this.street = street;
-        this.city = city;
-        this.provinceOrState = provinceOrState;
-    }
 
 }
